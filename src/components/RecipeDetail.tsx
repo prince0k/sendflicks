@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Bookmark, Printer, Minus, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { featuredRecipes } from '../data/recipes';
 
 const relatedRecipes = [
   {
@@ -22,7 +23,9 @@ const relatedRecipes = [
 ];
 
 export function RecipeDetail() {
+  const { id } = useParams();
   const [servings, setServings] = useState(6);
+  const selectedRecipe = featuredRecipes.find((recipe) => recipe.id === id) ?? featuredRecipes[0];
 
   return (
     <main className="animate-fade-in bg-zinc-950 min-h-screen">
@@ -41,9 +44,7 @@ export function RecipeDetail() {
               ))}
             </div>
             <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white mb-8 leading-[0.9]">
-              Slow-Smoked <br />
-              <span className="text-zinc-600">Brisket</span> with <br />
-              Dr. Pepper Glaze
+              {selectedRecipe.title}
             </h1>
             <p className="text-2xl font-light italic text-zinc-400 font-serif leading-relaxed max-w-2xl">
               A labor of love that rewards patience with melt-in-your-mouth tenderness and a uniquely sweet, peppery bark.
@@ -63,8 +64,8 @@ export function RecipeDetail() {
 
       <div className="w-full aspect-[21/9] h-[50vh] min-h-[400px] overflow-hidden bg-zinc-900 mb-24 grayscale hover:grayscale-0 transition-all duration-1000">
         <img 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcMeYbZpbyGvBLNkw8hIVc0XqCuRPDPYCh5Q-nqF0jzG65-gMy1fBxM7F1JP2BX_yhSqp8gk0AbDtzfuodYYTp2gMRB-E65xL_xPE37AJZ1EhUmCftupy9brWHOULEgOM5K5eSW5lpHnH0jccAdJUROT4wYbO7HQRtkAgaal4NFsCCKIXeaciVyyHFnCFyuDIyImvtcvroDPMH2vmYq42UJQu969-t1KAsUCSO2eG0D2R9-Pqsc84Qks9VTtlVeRwlCzAKAcUL53A"
-          alt="Brisket"
+          src={selectedRecipe.image}
+          alt={selectedRecipe.title}
           className="w-full h-full object-cover"
         />
       </div>

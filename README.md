@@ -16,6 +16,8 @@ View your app in AI Studio: https://ai.studio/apps/913c13a1-3b0e-46a5-ad81-372fc
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+3. Run the API (stores newsletter emails in `data/subscribers.json`):
+   `npm run dev:api`
+4. Run the app:
    `npm run dev`
 # sendflicks

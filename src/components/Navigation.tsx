@@ -67,9 +67,18 @@ export function Footer() {
         <div className="md:col-span-2 flex flex-col gap-6">
           <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600">Explore</h4>
           <div className="flex flex-col gap-3">
-            {['About Us', 'Recipes', 'Privacy Policy', 'Contact'].map(link => (
-              <a key={link} href="#" className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider hover:text-white transition-colors">{link}</a>
-            ))}
+            <Link to="/all" className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider hover:text-white transition-colors">
+              Recipes
+            </Link>
+            <Link to="/privacy-policy" className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms-and-conditions" className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider hover:text-white transition-colors">
+              Terms & Conditions
+            </Link>
+            <a href="mailto:hello@sendflicks.local" className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider hover:text-white transition-colors">
+              Contact
+            </a>
           </div>
         </div>
 
