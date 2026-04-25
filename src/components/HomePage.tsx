@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Hero, CategoryBrowse } from './HomeComponents';
 import { RecipeCard, Newsletter, Recipe } from './RecipeCard';
 
@@ -59,7 +60,9 @@ export function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-20">
             {featuredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <Fragment key={recipe.id}>
+                <RecipeCard recipe={recipe} />
+              </Fragment>
             ))}
           </div>
         </div>
