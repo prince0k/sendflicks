@@ -1,19 +1,16 @@
 import { motion } from 'motion/react';
 import { Heart, SignalHigh, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState, type FormEvent } from 'react';
+import type { Recipe } from '../data/recipes';
+import { subscribeEmail } from '../lib/subscribe';
 
-export interface Recipe {
-  id: string;
-  title: string;
-  image: string;
-  time: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  calories: string;
-  tag: string;
-  category: string;
+interface RecipeCardProps {
+  recipe: Recipe;
+  key?: string;
 }
 
-export function RecipeCard({ recipe }: { recipe: Recipe }) {
+export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <motion.article 
       whileHover={{ y: -5 }}
@@ -64,6 +61,30 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
 }
 
 export function Newsletter() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus('saving');
+    setMessage('');
+    try {
+      const result = await subscribeEmail(email, 'newsletter-form');
+      if (result?.status === 'already_subscribed') {
+        setMessage('You are already subscribed.');
+      } else {
+        setMessage('Thanks for subscribing!');
+      }
+      setStatus('success');
+      localStorage.setItem('sendflicks_subscribed', 'true');
+      setEmail('');
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : 'Subscription failed.');
+    }
+  }
+
   return (
     <section className="bg-zinc-950 py-32 border-t border-white/5 relative overflow-hidden">
        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black uppercase text-white/2 pointer-events-none whitespace-nowrap">
@@ -76,16 +97,26 @@ export function Newsletter() {
         <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-12 max-w-lg mx-auto leading-loose">
           Join 50k+ home cooks receiving weekly recipes, tips, and stories.
         </p>
-        <form className="flex flex-col sm:flex-row gap-6">
+        <form className="flex flex-col sm:flex-row gap-6" onSubmit={onSubmit}>
           <input 
             type="email" 
             placeholder="EMAIL_ADDRESS"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             className="flex-1 px-4 py-5 bg-transparent border-b border-zinc-800 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors font-mono text-[10px] tracking-widest"
           />
-          <button className="bg-white text-zinc-950 px-12 py-5 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-zinc-200 transition-colors">
-            Subscribe
+          <button
+            type="submit"
+            disabled={status === 'saving'}
+            className="bg-white text-zinc-950 px-12 py-5 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-zinc-200 transition-colors disabled:opacity-70"
+          >
+            {status === 'saving' ? 'Saving...' : 'Subscribe'}
           </button>
         </form>
+        {message && (
+          <p className={`mt-4 text-sm ${status === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>{message}</p>
+        )}
       </div>
     </section>
   );
